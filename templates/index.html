@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Innovation Strategist - Sustainable Beers</title>
+    <style>
+        /* Centering the header and form */
+        .centered {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Styling the form */
+        form {
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 80%; /* Make the textarea responsive */
+            max-width: 600px; /* Set a max width */
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50; /* Green button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049; /* Slightly darker green */
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        .full-width-image {
+            width: 100%;
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        /* Styling the result section */
+        #result {
+            margin-top: 20px;
+            width: 80%; /* Keep result aligned */
+            max-width: 600px;
+            word-wrap: break-word;
+            margin-left: 320px; /* Updated left margin to 320px */
+            text-align: left; /* Left align text */
+        }
+    </style>
+</head>
+<body>
+    <img src='../static/image/1693864497078.jpg' alt="HTML Tutorial" class="full-width-image">
+    <!-- Centralized Section -->
+    <div class="centered">
+        <h1>I'm Mr Greene, your planet-loving Brewnovation Strategist!</h1>
+        <form id="prompt-form" method="POST" action="/generate">
+            <label for="prompt">Enter your prompt:</label><br>
+            <textarea id="prompt" name="prompt" rows="4" cols="50" placeholder="    How may I help you brew greener?    "></textarea><br><br>
+            <button type="submit">Generate Ideas</button>
+        </form>
+    </div>
+
+    <!-- Response Section -->
+    <div id="result"></div>
+
+    <!-- JavaScript Code -->
+    <script>
+        const form = document.getElementById('prompt-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const formData = new FormData(form);
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    body: formData,
+                });
+                
+                const data = await response.json();
+                const resultDiv = document.getElementById('result');
+                
+                if (data.output) {
+                    // Convert the response text with \n to HTML line breaks
+                    resultDiv.innerHTML = data.output.replace(/\n/g, '<br>');
+                } else {
+                    resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+                }
+            } catch (error) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `<p>An unexpected error occurred: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
