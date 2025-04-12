@@ -3,7 +3,6 @@
 <head>
     <title>RPA Project ChatBot</title>
     <style>
-        /* Centering the header and form */
         .centered {
             display: flex;
             flex-direction: column;
@@ -12,53 +11,79 @@
             text-align: center;
             margin-bottom: 20px;
         }
-
-        /* Styling the form */
+    
         form {
             margin-top: 20px;
         }
-
+    
         textarea {
-            width: 80%; /* Make the textarea responsive */
-            max-width: 600px; /* Set a max width */
+            width: 80%;
+            max-width: 600px;
             padding: 10px;
             font-size: 16px;
         }
-
+    
         button {
             padding: 10px 20px;
             font-size: 16px;
-            background-color: #4CAF50; /* Green button */
+            background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-
+    
         button:hover {
-            background-color: #45a049; /* Slightly darker green */
+            background-color: #45a049;
         }
-
+    
         body, html {
             margin: 0;
             padding: 0;
         }
-
+    
         .full-width-image {
             width: 100%;
-            height: auto; /* Maintain aspect ratio */
+            height: auto;
         }
-
-        /* Styling the result section */
+    
         #result {
             margin-top: 20px;
-            width: 80%; /* Keep result aligned */
+            width: 80%;
             max-width: 600px;
             word-wrap: break-word;
-            margin-left: 320px; /* Updated left margin to 320px */
-            text-align: left; /* Left align text */
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
         }
-    </style>
+    
+        .box {
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px auto;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    
+        .green-box {
+            border: 2px solid #4CAF50;
+            background-color: #f0fff0;
+        }
+    
+        .orange-box {
+            border: 2px solid #FFA500;
+            background-color: #fffaf0;
+        }
+    
+        .red-box {
+            border: 2px solid #FF6347;
+            background-color: #fff5f5;
+        }
+    
+        h2, h3, h4 {
+            margin: 0;
+        }
+    </style>        
 </head>
 <body>
     <!-- Centralized Section -->
@@ -79,29 +104,65 @@
         const form = document.getElementById('prompt-form');
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
-            
+    
             const formData = new FormData(form);
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = "Processing...";
+    
             try {
                 const response = await fetch('/generate', {
                     method: 'POST',
                     body: formData,
                 });
-                
+    
                 const data = await response.json();
-                const resultDiv = document.getElementById('result');
-                
+    
                 if (data.output) {
-                    // Convert the response text with \n to HTML line breaks
-                    resultDiv.innerHTML = data.output.replace(/\n/g, '<br>');
+                    const lines = data.output.trim().split('\n').filter(line => line.trim() !== "");
+    
+                    let formattedOutput = "";
+    
+                    if (lines.length > 0) {
+                        formattedOutput += `
+                            <div class="box green-box">
+                                <h2>Team</h2>
+                            </div>
+                            <div class="box green-box">
+                                <p>${lines[0]}</p>
+                            </div>`;
+                    }
+    
+                    if (lines.length > 1) {
+                        formattedOutput += `
+                            <div class="box orange-box">
+                                <h3>Priority</h3>
+                            </div>
+                            <div class="box orange-box">
+                                <p>${lines[1]}</p>
+                            </div>`;
+                    }
+    
+                    if (lines.length > 2) {
+                        formattedOutput += `
+                            <div class="box red-box">
+                                <h4>Issue</h4>
+                            </div>
+                            <div class="box red-box">
+                                <p>${lines[2]}</p>
+                            </div>`;
+                    }
+    
+                    resultDiv.innerHTML = formattedOutput;
                 } else {
                     resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
                 }
             } catch (error) {
-                const resultDiv = document.getElementById('result');
                 resultDiv.innerHTML = `<p>An unexpected error occurred: ${error.message}</p>`;
             }
         });
     </script>
+    
+    
 </body>
 </html>
 

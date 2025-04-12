@@ -15,7 +15,7 @@ genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 # Create the model
 generation_config = {
-  "temperature": 1,
+  "temperature": 0,
   "top_p": 0.95,
   "top_k": 40,
   "max_output_tokens": 8192,
@@ -60,78 +60,102 @@ If unclear, use \"N/A\".
 
 OUTPUT FORMAT:
 Present the extracted information using the following structure:
-Team:       [TeamName]
-
-
-
-Priority:   [PriorityLevel]
-
-
-
-Issue:      [IssueType]
+[TeamName]
+[PriorityLevel]
+[IssueType]
 
 For example:
-Team:       Course
-
-
-
-Priority:   Low
-
-
-
-Issue:      User Enquiry""",
+Course
+Low
+User Enquiry""",
 )
 
 chat_session = model.start_chat(
-  history = [
-  {
-    "role": "user",
-    "parts": [
-      "I applied for the Cybersecurity Essentials course via the portal last week. May I know the status of my application and whether any further documents are required?"
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      "Team:       Course\n\nPriority:   Low\n\nIssue:      User Enquiry"
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      "I recently completed the Data Literacy Foundations course and noticed my name was misspelled on the certificate. Could you please re-issue the certificate with the correct spelling: Anjali Verma?"
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      "Team:       Course\n\nPriority:   Low\n\nIssue:      Data"
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      "We've noticed a mismatch in the enrolment data pushed to the SSG API for the April intake. Kindly review the submission and advise on next steps to ensure compliance."
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      "Team:       Grants\n\nPriority:   Low\n\nIssue:      Data"
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      "Could you clarify the expected response schema for the /disbursementStatus endpoint in the new TGS Grant API v2.1? We're facing parsing issues during the integration testing."
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      "Team:       Grants\n\nPriority:   Low\n\nIssue:      User Enquiry"
-    ]
-  }
+  history=[
+    {
+      "role": "user",
+      "parts": [
+        "Please assist with the reactivation of user ID: EYS12345 for the Training Partners portal. The account was deactivated due to inactivity but is now required for audit reporting."
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Account Access\nLow\nService Request"
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "Kindly proceed with deactivating the account of michael.yap@eysg.com who left the organization on 28 March 2025. Please confirm once the deactivation is complete."
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Account Access\nLow\nService Request"
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "We are observing significant latency in the grant portal during peak hours. Could the infra team investigate and advise if scaling upgrades are in progress?"
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Grants\nLow\nApplication"
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "Can you confirm if the scheduled upgrade for the shared SFTP server is still planned for April 3rd between 1AM–4AM? We need to notify impacted users."
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Common Services\nLow\nService Request"
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "I recently completed the Data Literacy Foundations course and noticed my name was misspelled on the certificate. Could you please re-issue the certificate with the correct spelling: Anjali Verma?"
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Course\nLow\nData"
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "I applied for the Cybersecurity Essentials course via the portal last week. May I know the status of my application and whether any further documents are required?"
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Course\nLow\nUser Enquiry"
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "We've noticed a mismatch in the enrolment data pushed to the SSG API for the April intake. Kindly review the submission and advise on next steps to ensure compliance."
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Grants\nLow\nData"
+      ],
+    }
 ]
 
     
@@ -194,26 +218,14 @@ If unclear, use \"N/A\".
 
 OUTPUT FORMAT:
 Present the extracted information using the following structure:
- Team:       [TeamName]
-
-
-
-Priority:   [PriorityLevel]
-
-
-
-Issue:      [IssueType]
+[TeamName]
+[PriorityLevel]
+[IssueType]
 
 For example:
-Team:       Course
-
-
-
-Priority:   Low
-
-
-
-Issue:      User Enquiry""",
+Course
+Low
+User Enquiry""",
         )
         chat_session = model.start_chat(history=[
             {"role": "user", "parts": [user_input]}
