@@ -120,39 +120,37 @@
                 if (data.output) {
                     const lines = data.output.trim().split('\n').filter(line => line.trim() !== "");
     
-                    let formattedOutput = "";
+                    // Find all table rows
+                    const tableRows = lines.filter(line => line.startsWith('|'));
     
-                    if (lines.length > 0) {
-                        formattedOutput += `
-                            <div class="box green-box">
-                                <h2>Team</h2>
-                            </div>
-                            <div class="box green-box">
-                                <p>${lines[0]}</p>
-                            </div>`;
+                    if (tableRows.length >= 3) {
+                        const dataLine = tableRows[2]; // 3rd line is the actual data
+                        const values = dataLine.split('|').map(v => v.trim()).filter(v => v !== "");
+    
+                        let formattedOutput = "";
+    
+                        if (values.length > 0) {
+                            formattedOutput += `
+                                <div class="box green-box"><h2>Team</h2></div>
+                                <div class="box green-box"><p>${values[0]}</p></div>`;
+                        }
+    
+                        if (values.length > 1) {
+                            formattedOutput += `
+                                <div class="box orange-box"><h3>Priority</h3></div>
+                                <div class="box orange-box"><p>${values[1]}</p></div>`;
+                        }
+    
+                        if (values.length > 2) {
+                            formattedOutput += `
+                                <div class="box red-box"><h4>Issue</h4></div>
+                                <div class="box red-box"><p>${values[2]}</p></div>`;
+                        }
+    
+                        resultDiv.innerHTML = formattedOutput;
+                    } else {
+                        resultDiv.innerHTML = `<p>Could not find valid data in the response.</p>`;
                     }
-    
-                    if (lines.length > 1) {
-                        formattedOutput += `
-                            <div class="box orange-box">
-                                <h3>Priority</h3>
-                            </div>
-                            <div class="box orange-box">
-                                <p>${lines[1]}</p>
-                            </div>`;
-                    }
-    
-                    if (lines.length > 2) {
-                        formattedOutput += `
-                            <div class="box red-box">
-                                <h4>Issue</h4>
-                            </div>
-                            <div class="box red-box">
-                                <p>${lines[2]}</p>
-                            </div>`;
-                    }
-    
-                    resultDiv.innerHTML = formattedOutput;
                 } else {
                     resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
                 }
@@ -160,7 +158,8 @@
                 resultDiv.innerHTML = `<p>An unexpected error occurred: ${error.message}</p>`;
             }
         });
-    </script>
+    </script>   
+    
     
     
 </body>
